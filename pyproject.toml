@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "divflow"
+version = "0.1.0"
+description = ""
+authors = ["Roman <romanbezh@gmail.com>"]
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.6"
+uvicorn = { extras = ["standard"], version = "^0.34.0" }
+pydantic = "^2.10.3"
+sqlmodel = "^0.0.22"
+python-decouple = "^3.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
