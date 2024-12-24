@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["Roman <romanbezh@gmail.com>"]
 readme = "README.md"
-
+packages = [{ include = "divflow" }]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
