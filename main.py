@@ -2,15 +2,12 @@ import uvicorn
 
 from fastapi import FastAPI
 
+from routers.main_routers import main_app
 
-app = FastAPI()
 
-
-@app.get("/")
-def main():
-    return {"message": "Hello, world!"}
-
+app = FastAPI(name="DivFlow")
+app.include_router(main_app)
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
