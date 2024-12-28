@@ -1,5 +1,4 @@
 import requests
-
 from pytest import fixture
 
 

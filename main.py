@@ -1,9 +1,7 @@
 import uvicorn
-
 from fastapi import FastAPI
 
 from routers.main_routers import main_app
-
 
 app = FastAPI(name="DivFlow")
 app.include_router(main_app)
