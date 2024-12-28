@@ -13,7 +13,7 @@ def test_main(url):
     assert response.json() == {"message": "Hello World"}
 
 
-def test_status(url, uri='/status'):
+def test_status(url, uri="/status"):
     response = requests.get(url + uri)
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
