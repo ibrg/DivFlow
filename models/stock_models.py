@@ -6,7 +6,7 @@ from sqlmodel import Field
 from .base import BaseModel
 
 
-class StockDividend(BaseModel):
+class Stock(BaseModel):
     """
     Represents a stock dividend record.
 
