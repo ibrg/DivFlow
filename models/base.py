@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlmodel import Field, SQLModel
 
 
-class BaseModel(SQLModel, table=True):
+class BaseModel(SQLModel):
     """
     Represents a base model for all models.
 

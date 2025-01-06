@@ -6,7 +6,7 @@ from sqlmodel import Field
 from .base import BaseModel
 
 
-class Stock(BaseModel):
+class Stock(BaseModel, table=True):
     """
     Represents a stock record.
 
@@ -22,7 +22,7 @@ class Stock(BaseModel):
 
 
 
-class StockDividend(BaseModel):
+class StockDividend(BaseModel, table=True):
     """
     Represents a stock dividend record.
 
@@ -36,7 +36,7 @@ class StockDividend(BaseModel):
         declaration_date (str): The date when the dividend is declared.
     """
 
-    stock: Stock = Field(foreign_key="Stock")
+    stock: str = Field(foreign_key="stock.symbol")
 
     dividend_date: Optional[datetime]
     adjusted_amount: float
@@ -44,3 +44,5 @@ class StockDividend(BaseModel):
     record_date: str
     pay_date: str
     declaration_date: str
+
+
