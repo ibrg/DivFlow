@@ -21,7 +21,6 @@ class Stock(BaseModel, table=True):
     price: float = Field(default=0.0, max_digits=10, decimal_places=2)
 
 
-
 class StockDividend(BaseModel, table=True):
     """
     Represents a stock dividend record.
@@ -44,5 +43,3 @@ class StockDividend(BaseModel, table=True):
     record_date: str
     pay_date: str
     declaration_date: str
-
-
