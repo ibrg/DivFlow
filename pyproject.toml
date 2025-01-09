@@ -15,6 +15,7 @@ pydantic = "^2.10.3"
 sqlmodel = "^0.0.22"
 python-decouple = "^3.8"
 yfinance = "^0.2.51"
+fmpsdk = "^20250102.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
