@@ -16,7 +16,7 @@ class Stock(BaseModel, table=True):
         price (float): The current price of the stock.
     """
 
-    symbol: str = Field(max_length=100, index=True)
+    symbol: str = Field(max_length=100, index=True, unique=True)
     name: str = Field(max_length=150)
     price: float = Field(default=0.0, max_digits=10, decimal_places=2)
 
