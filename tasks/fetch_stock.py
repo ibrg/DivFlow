@@ -1,22 +1,34 @@
+import os
+from dotenv import load_dotenv
+
 import fmpsdk
 import sqlite3
 
+from datetime import datetime
+
 from typing import List, Dict
 
-from env import API_KEY, DB_NAME
+
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY_fmpsdk")
+DB_NAME = os.getenv("SQLITE_DB_NAME")
 
 
 EXCHANGES = ["New York Stock Exchange", "NASDAQ"]
 
 
-def filter_stock_on_exchanges(stock_list: List[Dict], exchanges: List[str]=EXCHANGES) -> List[Dict]:
+def filter_stock_on_exchanges(
+    stock_list: List[Dict], exchanges: List[str] = EXCHANGES
+) -> List[Dict]:
     """
     Filters the stock list based on the exchanges.
-    
+
     :param stock_list: THe stock list (list of dict).
     :param exchanges: The list of exchanges  (list of str).
     :return: The filtered list of exchanges.
     """
+    print("Filtering stock list")
     return [stock for stock in stock_list if stock.get("exchange") in exchanges]
 
 
@@ -34,8 +46,11 @@ def fetch_stock_list(api_key: str | None = API_KEY) -> List[Dict]:
             raise ValueError("API key is missing.")
         response = fmpsdk.symbols_list(apikey=api_key)
         if not isinstance(response, list):
-            raise ValueError("Unexpected API response format: Expected a list of stocks.")
-        return  response
+            raise ValueError(
+                "Unexpected API response format: Expected a list of stocks."
+            )
+        print("Fetching data from API")
+        return response
     except Exception as e:
         raise Exception(f"Error when receiving data from API: {e}")
 
@@ -60,14 +75,34 @@ def write_to_db(data: List[Dict]):
     try:
         c = conn.cursor()
         print("Connected to the database", c)
+        for stock in data:
+            # Insert the stock data into the database
+            if (
+                not stock.get("symbol")
+                or not stock.get("name")
+                or not stock.get("price")
+            ):
+                print(f"Skipping invalid stock data: {stock}")
+                continue
+            c.execute(
+                "INSERT INTO stock (symbol, name, price, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+                (
+                    stock["symbol"],
+                    stock["name"],
+                    stock["price"],
+                    datetime.now().isoformat(),
+                    datetime.now().isoformat(),
+                ),
+            )
+
     except Exception as e:
         raise Exception(f"Error when connecting to the database: {e}")
 
     # Commit the changes
     conn.commit()
-
+    print("Data written to the database")
     # Close the connection
     conn.close()
 
 
-    write_to_db(filter_stock_on_exchanges(fetch_stock_list()))
+write_to_db(filter_stock_on_exchanges(fetch_stock_list()))
