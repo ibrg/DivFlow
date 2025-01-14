@@ -3,6 +3,8 @@ from typing import Annotated
 from sqlmodel import create_engine, SQLModel, Session
 from fastapi import Depends
 
+from app.models  import stock  #  Dont delete this import!!! It is used in the SQLModel.metadata.create_all() function.
+
 from env import SQLITE_DB
 
 if not SQLITE_DB:
@@ -12,11 +14,6 @@ engine = create_engine(SQLITE_DB, echo=True)
 
 def init_db():
     SQLModel.metadata.create_all(engine)
-    print(SQLModel.metadata.tables.keys())
-
-
-def close_db():
-    SQLModel.metadata.drop_all(engine)
 
 
 def get_session():
