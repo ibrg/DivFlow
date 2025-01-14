@@ -1,8 +1,9 @@
 import fmpsdk
+import sqlite3
 
 from typing import List, Dict
 
-from env import API_KEY
+from env import API_KEY, DB_NAME
 
 
 EXCHANGES = ["New York Stock Exchange", "NASDAQ"]
@@ -19,7 +20,7 @@ def filter_stock_on_exchanges(stock_list: List[Dict], exchanges: List[str]=EXCHA
     return [stock for stock in stock_list if stock.get("exchange") in exchanges]
 
 
-def fetch_filtered_stock_list(api_key: str = API_KEY) -> List[Dict]:
+def fetch_stock_list(api_key: str | None = API_KEY) -> List[Dict]:
     """
     Fetch stock list API fmpsdk and filter by US exchanges.
 
@@ -27,7 +28,6 @@ def fetch_filtered_stock_list(api_key: str = API_KEY) -> List[Dict]:
     :return: The filterd list of stock.
     :raises: Exception if data retrieval failed.
     """
-    usa_exchanges = ["New York Stock Exchange", "NASDAQ"]
     try:
         # Получение данных из API
         if not api_key:
@@ -35,7 +35,7 @@ def fetch_filtered_stock_list(api_key: str = API_KEY) -> List[Dict]:
         response = fmpsdk.symbols_list(apikey=api_key)
         if not isinstance(response, list):
             raise ValueError("Unexpected API response format: Expected a list of stocks.")
-        return  filter_stock_on_exchanges(response, usa_exchanges)
+        return  response
     except Exception as e:
         raise Exception(f"Error when receiving data from API: {e}")
 
@@ -44,3 +44,30 @@ def fetch_dividend_data(ticker):
     # Fetch dividend data from yahoo finance
     ...
 
+
+def write_to_db(data: List[Dict]):
+    """
+    Write the data to the database.
+
+    :param data: The data to write (list of dict).
+    """
+
+    # Connect to the database
+    if not DB_NAME:
+        raise ValueError("DB_NAME is not set in the environment variables.")
+    conn = sqlite3.connect(DB_NAME)
+
+    try:
+        c = conn.cursor()
+        print("Connected to the database", c)
+    except Exception as e:
+        raise Exception(f"Error when connecting to the database: {e}")
+
+    # Commit the changes
+    conn.commit()
+
+    # Close the connection
+    conn.close()
+
+
+    write_to_db(filter_stock_on_exchanges(fetch_stock_list()))
